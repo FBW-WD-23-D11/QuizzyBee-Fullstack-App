@@ -27,6 +27,13 @@ const questions = [
 
 export default function App  () {
 
+  useEffect(() => {
+    const getQuestions = async () => {
+      const questions = await fetch('http://localhost:2000/questions/10')
+    }
+    getQuestions();
+  }, [])
+
   const loadQuestion = () => {
     const random = Math.random();
     const randomNumber = Math.ceil(random * questions.length);

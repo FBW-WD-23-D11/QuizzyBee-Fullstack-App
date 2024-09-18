@@ -4,15 +4,15 @@ const express = require("express");
 const questions = require("./api/routes/questions.js");
 const app = express();
 const cors = require("cors");
-const { default: Question } = require("./model/questions.js");
+const Question = require("./model/questions.js");
 
 const port = 2000;
 
 // Connect to MongoDB
 mongoose
   .connect("mongodb://localhost:27017/quizDB", {})
-  .then(() => {
-    console.log("Connected to MongoDB");
+  .then(async () => {
+    console.log("connected to Mongoose! Yippee!!");
   })
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
@@ -25,10 +25,25 @@ app.use(
   })
 );
 
-app.get("/questions/:limit", (req, res) => {
-  const { limit } = req.params;
+app.get("/questions/:limit", async (req, res) => {
+  console.log(2222);
+  try {
+    const { limit } = req.params;
 
-  console.log("logged: limit", limit);
+    if (limit != 10) {
+      return res.send({
+        status: 400,
+        message: "a number different than 10 is not yet supported",
+      });
+    }
+
+    const questions = await Question.find({}).limit(limit);
+
+    res.send({ status: 200, questions });
+    console.log("logged: limit", limit);
+  } catch (e) {
+    console.log("logged: error", e);
+  }
   // const questions = Question.find().limit();
 });
 

@@ -7,7 +7,10 @@ const seed = async () => {
   mongoose
     .connect("mongodb://localhost:27017/quizDB", {})
     .then(async () => {
-      const result = await Question.insertMany(questions);
+      const questions = await Question.find({}).limit(2);
+      console.log("logged: questions", questions);
+
+      // const result = await Question.insertMany(questions);
       console.log("logged: result", result);
     })
     .catch((err) => {
