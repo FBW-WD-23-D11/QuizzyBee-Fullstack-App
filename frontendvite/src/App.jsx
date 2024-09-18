@@ -4,27 +4,6 @@ import { useForm } from "react-hook-form";
 
 import Confetti from "./Confetti";
 
-// const questions = [
-//   {
-//     question:
-//       "Was sollte die Hauptverantwortung des Backends in Bezug auf Benutzereingaben sein?",
-//     answers: [
-//       "Daten zu speichern",
-//       "Daten zu validieren und zu sichern",
-//       "Benutzerdaten zu transformieren",
-//     ],
-//     correctIndex: 1,
-//   },
-//   {
-//     question: "Welche Art von Daten müssen immer validiert werden?",
-//     answers: [
-//       "Benutzereingaben wie E-Mails oder Passwörter",
-//       "Nur interne Systemdaten",
-//       "Nur Daten von API-Aufrufen",
-//     ],
-//     correctIndex: 0,
-//   }]
-
 export default function App  () {
   const [question, setQuestion] = useState(null);
   const [questions, setQuestions] = useState(null);
@@ -38,12 +17,6 @@ export default function App  () {
   const [user, setUser] = useState({ username: '', email: '', password: '' });
 
   const loginContainer = useRef(null);
-
-  useEffect(() => {
-    // console.log(user);
-    console.log(loginContainer.current);
-
-  });
 
   const SignInOrRegister = async (e) => {
     e.preventDefault();
@@ -60,16 +33,8 @@ export default function App  () {
     const GETres = await fetch('http://localhost:2000/users');
     const GETdata = await GETres.json();
 
-    console.log(GETdata);
-
-    const existingUser = GETdata.find(({username}) => {
-      console.log(username);
-      console.log(user.username);
-
-      return username === user.username;
-    });
-
-    console.log(existingUser);
+    const existingUser = GETdata.find(({username}) => 
+      username === user.username);
 
     !existingUser && postNewUser(user);
 
@@ -85,9 +50,6 @@ export default function App  () {
       const res = await fetch('http://localhost:2000/questions/10');
       const data = await res.json();
       const questions = data.questions;
-
-      // console.log(data);
-      // console.log(questions);
 
       setQuestions(questions);
     }
