@@ -6,11 +6,13 @@ const app = express();
 const cors = require("cors");
 const Question = require("./model/questions.js");
 
+app.use(express.json());
+
 const port = 2000;
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/quizDB", {})
+  .connect("mongodb://localhost:27017/QuizzyBee", {})
   .then(async () => {
     console.log("connected to Mongoose! Yippee!!");
   })
@@ -49,6 +51,27 @@ app.get("/questions/:limit", async (req, res) => {
 
 app.post("/check-answer", (req, res) => {
   const { body } = req;
+});
+
+app.post("/addquestion", async (req, res) => {
+  try {
+    const { userId, question, answers, correctIndex } = req.body;
+
+    const newQuestion = new Question({
+      userId,
+      question,
+      answers,
+      correctIndex,
+    });
+
+    await newQuestion.save();
+    res.status(201).json({
+      message: "Frage erfolgreich hinzugefügt!",
+      question: newQuestion,
+    });
+  } catch (error) {
+    res.status(500).json({ message: Serverfehler });
+  }
 });
 
 app.listen(port, () => {

@@ -1,5 +1,4 @@
-
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Confetti from "./Confetti";
@@ -23,24 +22,24 @@ const questions = [
       "Nur Daten von API-Aufrufen",
     ],
     correctIndex: 0,
-  }]
+  },
+];
 
-export default function App  () {
-
-  useEffect(() => {
-    const getQuestions = async () => {
-      const questions = await fetch('http://localhost:2000/questions/10')
-    }
-    getQuestions();
-  }, [])
+export default function App() {
+  // useEffect(() => {
+  //   const getQuestions = async () => {
+  //     const questions = await fetch("http://localhost:2000/questions/10");
+  //   };
+  //   getQuestions();
+  // }, []);  // kann auskommentiert werden, da momentan nicht ausgeführt
 
   const loadQuestion = () => {
     const random = Math.random();
-    const randomNumber = Math.ceil(random * questions.length);
+    const randomNumber = Math.floor(random * questions.length); // ceil ersetzt durch floor
     const randomQuestion = questions[randomNumber];
 
     if (!randomQuestion) return;
-    const { answers, correctIndex } = randomQuestion;
+    const { answers, correctIndex } = randomQuestion; // setzt Objekt "randomQuestion" mit answers und correctIndex
 
     setQuestion(randomQuestion);
 
@@ -51,8 +50,6 @@ export default function App  () {
     setAnswers(answers);
   };
 
-
-
   const { register, handleSubmit } = useForm();
 
   const [question, setQuestion] = useState(null);
@@ -62,7 +59,7 @@ export default function App  () {
   const [rightAnswer, setRightAnswer] = useState(undefined);
   const [questionAnswered, setQuestionAnswered] = useState(false);
   const [allowConfetti, setAllowConfetti] = useState(false);
-  const [mode, setMode] = useState('general');
+  const [mode, setMode] = useState("general");
 
   useEffect(() => {
     loadQuestion();
@@ -94,11 +91,10 @@ export default function App  () {
 
   return (
     <>
-    <nav>
-      <div>practice</div>
-      <div>battle-mode</div>
-      
-    </nav>
+      <nav>
+        <div>practice</div>
+        <div>battle-mode</div>
+      </nav>
       <div className="bg-blue-200 w-[40vw] min-h-screen flex items-center">
         {rightAnswer && allowConfetti && <Confetti />}
         <div className="w-full">
@@ -153,5 +149,4 @@ export default function App  () {
       </div>
     </>
   );
-};
-
+}
