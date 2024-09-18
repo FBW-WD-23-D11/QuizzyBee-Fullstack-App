@@ -35,7 +35,7 @@ export default function App() {
 
   const loadQuestion = () => {
     const random = Math.random();
-    const randomNumber = Math.floor(random * questions.length);
+    const randomNumber = Math.floor(random * questions.length); // ceil ersetzt durch floor
     const randomQuestion = questions[randomNumber];
 
     if (!randomQuestion) return;
