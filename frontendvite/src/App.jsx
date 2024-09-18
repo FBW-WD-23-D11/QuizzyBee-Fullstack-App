@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     const getQuestions = async () => {
-      const data = await fetch('http://localhost:2000/questions');
+      const data = await fetch('http://localhost:2000/questions/2');
       const json = await data.json();
       debugger;
     }

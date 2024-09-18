@@ -4,7 +4,7 @@ const express = require("express");
 const questions = require("./api/routes/questions.js");
 const app = express();
 const cors = require("cors");
-const { default: Question } = require("./models/questions.js");
+const { default: Question } = require("./model/questions.js");
 
 const port = 2000;
 
@@ -25,9 +25,11 @@ app.use(
   })
 );
 
-app.get("/questions:limit", (req, res) => {
-  const { limit } = req.params();
-  const questions = Question.find().limit();
+app.get("/questions/:limit", (req, res) => {
+  const { limit } = req.params;
+
+  console.log("logged: limit", limit);
+  // const questions = Question.find().limit();
 });
 
 app.post("/check-answer", (req, res) => {

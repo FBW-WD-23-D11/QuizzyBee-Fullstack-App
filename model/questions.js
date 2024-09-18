@@ -6,10 +6,11 @@ const questionSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to the User model
-      required: true,
+      required: false,
     },
     question: {
       type: String,
+      unique: true,
       required: true,
     },
     answers: [
@@ -29,4 +30,4 @@ const questionSchema = new mongoose.Schema(
 
 const Question = mongoose.model("Question", questionSchema);
 
-export default Question;
+module.exports = Question;
