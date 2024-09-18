@@ -16,6 +16,7 @@ const questionSchema = new mongoose.Schema(
     answers: [
       {
         type: String,
+        required: true,
       },
     ],
     correctIndex: {
