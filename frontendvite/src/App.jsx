@@ -10,36 +10,24 @@ export default function App  () {
   useEffect(() => {
     const getQuestions = async () => {
       const data = await fetch('http://localhost:2000/questions/10');
-      debugger;
       const json = await data.json();
       setQuestions(json.questions);
+      setQuestion(json.questions[questionIndex]);
+
     }
     getQuestions();
   }, [])
 
-  const showQuestion = () => {
-
-
-    setAnswers(answers);
-  };
 
   const { register, handleSubmit } = useForm();
-
+  
+  const [questions, setQuestions] = useState([]);
   const [question, setQuestion] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
-  const [questions, setQuestions] = useState([]);
 
-  const [answers, setAnswers] = useState([]);
   const [rightAnswer, setRightAnswer] = useState(undefined);
-
   const [allowConfetti, setAllowConfetti] = useState(false);
 
-
-  useEffect(() => {
-    showQuestion();
-
-    return () => {};
-  }, []);
 
   const onSubmit = ({ answer }) => {
     
@@ -48,7 +36,7 @@ export default function App  () {
     const correctAnswer = question.answers[correctIndex];
 
     setTimeout(() => {
-      showQuestion();
+      // showQuestion();
     }, 4000);
 
     if (correctAnswer === answer) {
@@ -92,7 +80,7 @@ export default function App  () {
                   {...register("answer", { required: true })}
                 >
                   <option value="">Select...</option>
-                  {answers?.map((answer) => (
+                  {question?.answers?.map((answer) => (
                     <option key={answer} value={answer}>
                       {answer}
                     </option>
