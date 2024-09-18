@@ -1,60 +1,31 @@
-
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Confetti from "./Confetti";
 
-const questions = [
-  {
-    question:
-      "Was sollte die Hauptverantwortung des Backends in Bezug auf Benutzereingaben sein?",
-    answers: [
-      "Daten zu speichern",
-      "Daten zu validieren und zu sichern",
-      "Benutzerdaten zu transformieren",
-    ],
-    correctIndex: 1,
-  },
-  {
-    question: "Welche Art von Daten müssen immer validiert werden?",
-    answers: [
-      "Benutzereingaben wie E-Mails oder Passwörter",
-      "Nur interne Systemdaten",
-      "Nur Daten von API-Aufrufen",
-    ],
-    correctIndex: 0,
-  }]
+// const questions = [
+//   {
+//     question:
+//       "Was sollte die Hauptverantwortung des Backends in Bezug auf Benutzereingaben sein?",
+//     answers: [
+//       "Daten zu speichern",
+//       "Daten zu validieren und zu sichern",
+//       "Benutzerdaten zu transformieren",
+//     ],
+//     correctIndex: 1,
+//   },
+//   {
+//     question: "Welche Art von Daten müssen immer validiert werden?",
+//     answers: [
+//       "Benutzereingaben wie E-Mails oder Passwörter",
+//       "Nur interne Systemdaten",
+//       "Nur Daten von API-Aufrufen",
+//     ],
+//     correctIndex: 0,
+//   },
+// ];
 
-export default function App  () {
-
-  useEffect(() => {
-    const getQuestions = async () => {
-      const questions = await fetch('http://localhost:2000/questions/10')
-    }
-    getQuestions();
-  }, [])
-
-  const loadQuestion = () => {
-    const random = Math.random();
-    const randomNumber = Math.ceil(random * questions.length);
-    const randomQuestion = questions[randomNumber];
-
-    if (!randomQuestion) return;
-    const { answers, correctIndex } = randomQuestion;
-
-    setQuestion(randomQuestion);
-
-    setCorrectIndex(correctIndex);
-
-    if (!randomQuestion) return;
-
-    setAnswers(answers);
-  };
-
-
-
-  const { register, handleSubmit } = useForm();
-
+export default function App() {
   const [question, setQuestion] = useState(null);
 
   const [correctIndex, setCorrectIndex] = useState(null);
@@ -62,43 +33,116 @@ export default function App  () {
   const [rightAnswer, setRightAnswer] = useState(undefined);
   const [questionAnswered, setQuestionAnswered] = useState(false);
   const [allowConfetti, setAllowConfetti] = useState(false);
-  const [mode, setMode] = useState('general');
+  const [mode, setMode] = useState("general");
+
+  const { register, handleSubmit } = useForm();
 
   useEffect(() => {
-    loadQuestion();
-
-    return () => {};
+    const getQuestions = async () => {
+      try {
+        const res = await fetch("http://localhost:2000/questions/10");
+        const questions = await res.json();
+        loadQuestion(questions);
+      } catch (err) {
+        console.error("Error fetching questions:", err);
+      }
+    };
+    getQuestions();
   }, []);
 
-  const onSubmit = ({ answer }) => {
-    debugger;
-    if (!question) return;
-    const correctIndex = question.correctIndex;
-    const correctAnswer = question.answers[correctIndex];
+  // export default function App() {
+  //   useEffect(() => {
+  //     const getQuestions = async () => {
+  //       try {
+  //         const res = await fetch("http://localhost:2000/questions/10");
+  //         const questions = await res.json();
+  //         loadQuestion(questions);
+  //       } catch (err) {
+  //         console.error("Error fetching questions:", err);
+  //       }
+  //     };
+  //     getQuestions();
+  //   }, []);
 
-    setTimeout(() => {
-      loadQuestion();
-    }, 4000);
+  // const loadQuestion = () => {
+  //   const random = Math.random();
+  //   const randomNumber = Math.ceil(random * questions.length);
+  //   const randomQuestion = questions[randomNumber];
+
+  //   if (!randomQuestion) return;
+  //   const { answers, correctIndex } = randomQuestion;
+
+  //   setQuestion(randomQuestion);
+
+  //   setCorrectIndex(correctIndex);
+
+  //   if (!randomQuestion) return;
+
+  const loadQuestion = (questions) => {
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    const randomQuestion = questions[randomIndex];
+
+    if (!randomQuestion) return;
+    setQuestion(randomQuestion);
+    setAnswers(randomQuestion.answers);
+    setCorrectIndex(randomQuestion.correctIndex);
+  };
+
+  //   setAnswers(answers);
+  // };
+
+  // useEffect(() => {
+  //   loadQuestion();
+
+  //   return () => {};
+  // }, []);
+
+  // const onSubmit = ({ answer }) => {
+  //   debugger;
+  //   if (!question) return;
+  //   const correctIndex = question.correctIndex;
+  //   const correctAnswer = question.answers[correctIndex];
+
+  //   setTimeout(() => {
+  //     loadQuestion();
+  //   }, 4000);
+
+  //   if (correctAnswer === answer) {
+  //     setAllowConfetti(true);
+  //     setRightAnswer(true);
+  //     setTimeout(() => {
+  //       setAllowConfetti(false);
+  //       return setRightAnswer(undefined);
+  //     }, 4000);
+  //   } else {
+  //     setRightAnswer(false);
+  //   }
+  // };
+
+  const onSubmit = ({ answer }) => {
+    if (!question) return;
+    const correctAnswer = question.answers[correctIndex];
 
     if (correctAnswer === answer) {
       setAllowConfetti(true);
       setRightAnswer(true);
-      setTimeout(() => {
-        setAllowConfetti(false);
-        return setRightAnswer(undefined);
-      }, 4000);
+      setTimeout(() => setAllowConfetti(false), 3000);
     } else {
       setRightAnswer(false);
     }
+
+    setTimeout(() => {
+      setRightAnswer(undefined);
+      loadQuestion();
+    }, 3000);
   };
 
   return (
     <>
-    <nav>
-      <div>practice</div>
-      <div>battle-mode</div>
-      
-    </nav>
+      <nav>
+        <div>practice</div>
+        <div>battle-mode</div>
+      </nav>
       <div className="bg-blue-200 w-[40vw] min-h-screen flex items-center">
         {rightAnswer && allowConfetti && <Confetti />}
         <div className="w-full">
@@ -153,5 +197,4 @@ export default function App  () {
       </div>
     </>
   );
-};
-
+}

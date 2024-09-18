@@ -38,7 +38,7 @@ app.get("/questions/:limit", async (req, res) => {
     }
 
     const questions = await Question.find({}).limit(limit);
-
+    console.log(questions);
     res.send({ status: 200, questions });
     console.log("logged: limit", limit);
   } catch (e) {
