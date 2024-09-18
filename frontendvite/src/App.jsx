@@ -4,91 +4,62 @@ import { useForm } from "react-hook-form";
 
 import Confetti from "./Confetti";
 
-const questions = [
-  {
-    question:
-      "Was sollte die Hauptverantwortung des Backends in Bezug auf Benutzereingaben sein?",
-    answers: [
-      "Daten zu speichern",
-      "Daten zu validieren und zu sichern",
-      "Benutzerdaten zu transformieren",
-    ],
-    correctIndex: 1,
-  },
-  {
-    question: "Welche Art von Daten müssen immer validiert werden?",
-    answers: [
-      "Benutzereingaben wie E-Mails oder Passwörter",
-      "Nur interne Systemdaten",
-      "Nur Daten von API-Aufrufen",
-    ],
-    correctIndex: 0,
-  }]
 
 export default function App  () {
 
   useEffect(() => {
     const getQuestions = async () => {
-      const questions = await fetch('http://localhost:2000/questions/10')
+      const data = await fetch('http://localhost:2000/questions/10');
+      debugger;
+      const json = await data.json();
+      setQuestions(json.questions);
     }
     getQuestions();
   }, [])
 
-  const loadQuestion = () => {
-    const random = Math.random();
-    const randomNumber = Math.ceil(random * questions.length);
-    const randomQuestion = questions[randomNumber];
+  const showQuestion = () => {
 
-    if (!randomQuestion) return;
-    const { answers, correctIndex } = randomQuestion;
-
-    setQuestion(randomQuestion);
-
-    setCorrectIndex(correctIndex);
-
-    if (!randomQuestion) return;
 
     setAnswers(answers);
   };
 
-
-
   const { register, handleSubmit } = useForm();
 
   const [question, setQuestion] = useState(null);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [questions, setQuestions] = useState([]);
 
-  const [correctIndex, setCorrectIndex] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [rightAnswer, setRightAnswer] = useState(undefined);
-  const [questionAnswered, setQuestionAnswered] = useState(false);
+
   const [allowConfetti, setAllowConfetti] = useState(false);
-  const [mode, setMode] = useState('general');
+
 
   useEffect(() => {
-    loadQuestion();
+    showQuestion();
 
     return () => {};
   }, []);
 
   const onSubmit = ({ answer }) => {
-    debugger;
+    
     if (!question) return;
     const correctIndex = question.correctIndex;
     const correctAnswer = question.answers[correctIndex];
 
     setTimeout(() => {
-      loadQuestion();
+      showQuestion();
     }, 4000);
 
     if (correctAnswer === answer) {
       setAllowConfetti(true);
-      setRightAnswer(true);
+      // setRightAnswer(true);
       setTimeout(() => {
         setAllowConfetti(false);
-        return setRightAnswer(undefined);
+        // return setRightAnswer(undefined);
       }, 4000);
     } else {
-      setRightAnswer(false);
+      // setRightAnswer(false);
     }
   };
 
