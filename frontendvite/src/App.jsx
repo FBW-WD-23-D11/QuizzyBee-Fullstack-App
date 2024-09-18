@@ -1,35 +1,95 @@
 
-import {  useEffect, useState } from "react";
+import {  useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import Confetti from "./Confetti";
 
-const questions = [
-  {
-    question:
-      "Was sollte die Hauptverantwortung des Backends in Bezug auf Benutzereingaben sein?",
-    answers: [
-      "Daten zu speichern",
-      "Daten zu validieren und zu sichern",
-      "Benutzerdaten zu transformieren",
-    ],
-    correctIndex: 1,
-  },
-  {
-    question: "Welche Art von Daten müssen immer validiert werden?",
-    answers: [
-      "Benutzereingaben wie E-Mails oder Passwörter",
-      "Nur interne Systemdaten",
-      "Nur Daten von API-Aufrufen",
-    ],
-    correctIndex: 0,
-  }]
+// const questions = [
+//   {
+//     question:
+//       "Was sollte die Hauptverantwortung des Backends in Bezug auf Benutzereingaben sein?",
+//     answers: [
+//       "Daten zu speichern",
+//       "Daten zu validieren und zu sichern",
+//       "Benutzerdaten zu transformieren",
+//     ],
+//     correctIndex: 1,
+//   },
+//   {
+//     question: "Welche Art von Daten müssen immer validiert werden?",
+//     answers: [
+//       "Benutzereingaben wie E-Mails oder Passwörter",
+//       "Nur interne Systemdaten",
+//       "Nur Daten von API-Aufrufen",
+//     ],
+//     correctIndex: 0,
+//   }]
 
 export default function App  () {
+  const [question, setQuestion] = useState(null);
+  const [questions, setQuestions] = useState(null);
+  const [correctIndex, setCorrectIndex] = useState(null);
+  const [answers, setAnswers] = useState([]);
+  const [rightAnswer, setRightAnswer] = useState(undefined);
+  const [questionAnswered, setQuestionAnswered] = useState(false);
+  const [allowConfetti, setAllowConfetti] = useState(false);
+  const [mode, setMode] = useState('general');
+
+  const [user, setUser] = useState({ username: '', email: '', password: '' });
+
+  const loginContainer = useRef(null);
+
+  useEffect(() => {
+    // console.log(user);
+    console.log(loginContainer.current);
+
+  });
+
+  const SignInOrRegister = async (e) => {
+    e.preventDefault();
+    const postNewUser = async () => {
+      const res = await fetch('http://localhost:2000/users', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: { 'content-type': 'application/json' }
+      });
+      console.log('posted User');
+      loginContainer.current.style.display = 'none';
+    };
+
+    const GETres = await fetch('http://localhost:2000/users');
+    const GETdata = await GETres.json();
+
+    console.log(GETdata);
+
+    const existingUser = GETdata.find(({username}) => {
+      console.log(username);
+      console.log(user.username);
+
+      return username === user.username;
+    });
+
+    console.log(existingUser);
+
+    !existingUser && postNewUser(user);
+
+    existingUser && console.log(user.password === existingUser.password);
+
+    existingUser && user.password === existingUser.password && loginContainer.current &&
+    (loginContainer.current.style.display = 'none');
+
+  };
 
   useEffect(() => {
     const getQuestions = async () => {
-      const questions = await fetch('http://localhost:2000/questions/10')
+      const res = await fetch('http://localhost:2000/questions/10');
+      const data = await res.json();
+      const questions = data.questions;
+
+      // console.log(data);
+      // console.log(questions);
+
+      setQuestions(questions);
     }
     getQuestions();
   }, [])
@@ -55,20 +115,12 @@ export default function App  () {
 
   const { register, handleSubmit } = useForm();
 
-  const [question, setQuestion] = useState(null);
-
-  const [correctIndex, setCorrectIndex] = useState(null);
-  const [answers, setAnswers] = useState([]);
-  const [rightAnswer, setRightAnswer] = useState(undefined);
-  const [questionAnswered, setQuestionAnswered] = useState(false);
-  const [allowConfetti, setAllowConfetti] = useState(false);
-  const [mode, setMode] = useState('general');
 
   useEffect(() => {
-    loadQuestion();
+    questions && loadQuestion();
 
     return () => {};
-  }, []);
+  }, [questions]);
 
   const onSubmit = ({ answer }) => {
     debugger;
@@ -93,7 +145,29 @@ export default function App  () {
   };
 
   return (
-    <>
+    <div className="app">
+      <form className="login" onSubmit={SignInOrRegister} ref={loginContainer}>
+        <label htmlFor="username">Username</label>
+        <input type="name" id="username"
+          value={user.username}
+          onChange={(e) => setUser((keys) => ({ ...keys, username: e.target.value }))}
+        />
+        <label htmlFor="email">Email</label>
+        <input type="email" id="email"
+          value={user.email}
+          onChange={(e) => setUser((keys) => ({ ...keys, email: e.target.value }))}
+        />
+        <label htmlFor="password">Password</label>
+        <input type="password" id="password"
+          value={user.password}
+          onChange={(e) => setUser((keys) => ({ ...keys, password: e.target.value }))}
+        />
+        <button type="submit">Sign In / Register</button>
+      </form>
+      <nav className="nav-bar">
+        <div>progress & statistic</div>
+        <div>Username</div>
+      </nav>
     <nav>
       <div>practice</div>
       <div>battle-mode</div>
@@ -151,7 +225,7 @@ export default function App  () {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

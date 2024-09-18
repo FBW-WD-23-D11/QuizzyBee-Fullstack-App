@@ -15,6 +15,56 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+}
+
+.login {
+  background: #0af;
+  height: 110%;
+  width: 100vw;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  gap: 10px;
+  position: absolute;
+}
+
+.login input {
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+.login button {
+  margin-top: 20px;
+}
+
+.nav-bar {
+  background: #0af;
+  width: 100vw;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+}
+
+.nav-bar div {
+  padding: 10px 20px;
+  background: #09f;
+  color: #fff;
+  font-weight: 500;
+}
+
+.nav-bar div:hover {
+  background: #07f;
 }
 
 a {
