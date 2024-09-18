@@ -10,7 +10,7 @@ const port = 2000;
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/quizDB", {})
+  .connect("mongodb://localhost:27017/QuizzyBee", {})
   .then(async () => {
     console.log("connected to Mongoose! Yippee!!");
   })

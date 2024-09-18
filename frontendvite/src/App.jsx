@@ -26,12 +26,12 @@ const questions = [
 ];
 
 export default function App() {
-  useEffect(() => {
-    const getQuestions = async () => {
-      const questions = await fetch("http://localhost:2000/questions/10");
-    };
-    getQuestions();
-  }, []);
+  // useEffect(() => {
+  //   const getQuestions = async () => {
+  //     const questions = await fetch("http://localhost:2000/questions/10");
+  //   };
+  //   getQuestions();
+  // }, []);  // kann auskommentiert werden, da momentan nicht ausgeführt
 
   const loadQuestion = () => {
     const random = Math.random();
@@ -39,7 +39,7 @@ export default function App() {
     const randomQuestion = questions[randomNumber];
 
     if (!randomQuestion) return;
-    const { answers, correctIndex } = randomQuestion;
+    const { answers, correctIndex } = randomQuestion; // setzt Objekt "randomQuestion" mit answers und correctIndex
 
     setQuestion(randomQuestion);
 
