@@ -6,53 +6,65 @@ const app = express();
 const cors = require("cors");
 const Question = require("./model/questions.js");
 
-const port = 2000;
-
+const port = 2001;
+app.use(express.json());
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/quizDB", {})
-  .then(async () => {
-    console.log("connected to Mongoose! Yippee!!");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-  });
+    .connect("mongodb://localhost:27017/quizDB", {})
+    .then(async () => {
+        console.log("connected to Mongoose! Yippee!!");
+    })
+    .catch((err) => {
+        console.error("Error connecting to MongoDB:", err);
+    });
 
 app.use(
-  cors({
-    origin: "http://localhost:5173", // Allow requests from this domain
-    methods: "GET", // Allow only GET and POST requests
-  })
+    cors({
+        origin: "http://localhost:5173", // Allow requests from this domain
+        methods: "GET", // Allow only GET and POST requests
+    })
 );
 
 app.get("/questions/:limit", async (req, res) => {
-  console.log(2222);
-  try {
-    const { limit } = req.params;
+    // console.log(2222);
+    try {
+        const { limit } = req.params;
 
-    if (limit != 10) {
-      return res.send({
-        status: 400,
-        message: "a number different than 10 is not yet supported",
-      });
+        if (limit != 10) {
+            return res.send({
+                status: 400,
+                message: "a number different than 10 is not yet supported",
+            });
+        }
+
+        // const questions = await Question.find({}).limit(limit);
+        const questions = await Question.find({}, { correctIndex: 0 }).limit(
+            limit
+        );
+        // console.log(questions);
+
+        res.send({ status: 200, questions });
+        // res.send(questions);
+        // console.log("logged: limit", limit);
+    } catch (e) {
+        console.log("logged: error", e);
     }
-
-    const questions = await Question.find({}).limit(limit);
-
-    res.send({ status: 200, questions });
-    console.log("logged: limit", limit);
-  } catch (e) {
-    console.log("logged: error", e);
-  }
-  // const questions = Question.find().limit();
 });
 
-app.post("/check-answer", (req, res) => {
-  const { body } = req;
+app.post("/checkanswer", async (req, res) => {
+    console.log(11111);
+    console.log(req.body);
+    const { originId, answerIndex } = req.body;
+
+    const question = await Question.findOne({ _id: originId });
+    console.log(question);
+    return question.correctIndex === answerIndex
+        ? res.send(true)
+        : res.send(false);
 });
 
 app.listen(port, () => {
-  console.log("Listening on " + port);
+    console.log("Listening on " + port);
 });
 
 module.exports = app;
