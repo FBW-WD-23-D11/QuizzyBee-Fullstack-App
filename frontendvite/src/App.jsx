@@ -29,11 +29,25 @@ export default function App  () {
   const [allowConfetti, setAllowConfetti] = useState(false);
 
 
-  const onSubmit = ({ answer }) => {
+  const onSubmit = async ({ answer }) => {
     
+    const answerIndex = question.answers.findIndex((a) => {return  a === answer})
+
     if (!question) return;
-    const correctIndex = question.correctIndex;
-    const correctAnswer = question.answers[correctIndex];
+
+    const opts = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: question._id,
+        answerIndex
+      }),
+    };
+    
+    const data = await fetch('http://localhost:2000/checkanswer', opts);
+
 
     setTimeout(() => {
       // showQuestion();

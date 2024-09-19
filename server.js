@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const express = require("express");
-const questions = require("./api/routes/questions.js");
 const app = express();
 const cors = require("cors");
 const Question = require("./model/questions.js");
@@ -24,6 +23,8 @@ app.use(
     methods: "GET", // Allow only GET and POST requests
   })
 );
+
+app.use(express.json());
 
 app.get("/questions/:limit", async (req, res) => {
   try {
@@ -48,7 +49,15 @@ app.get("/questions/:limit", async (req, res) => {
   // const questions = Question.find().limit();
 });
 
-app.post("/check-answer", (req, res) => {
+// const frage = { id: "dgs6sdg6gs6" };
+app.post("/checkanswer", async ({ body: { _id, answerIndex } }, res) => {
+  console.log(_id, answerIndex);
+  const question = await Question.findById(_id);
+
+  res.send({ status: 200, isCorrect: answerIndex === question.correctIndex });
+});
+
+app.post("/getscore", (req, res) => {
   const { body } = req;
 });
 

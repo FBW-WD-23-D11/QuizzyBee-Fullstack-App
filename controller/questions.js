@@ -7,13 +7,13 @@ const scores = {
   "9/10": "Very good",
 };
 
-const getScore = (correctAnswers) => {
+const bestGetScoreVonMarius = (correctAnswers) => {
   const entry = Object.entries(scores).find(([scoreArea, message]) => {
-    const [lowerBound, _, ...upperBound] = scoreArea.split("");
+    const [lowerBound, upperBound] = scoreArea.split("/");
 
     return (
       correctAnswers >= Number(lowerBound) &&
-      correctAnswers <= Number(upperBound.join(""))
+      Number(correctAnswers) <= upperBound
     );
   });
 
@@ -23,13 +23,17 @@ const getScore = (correctAnswers) => {
 ${message}`;
 };
 
-const getScoreMarius = (correctAnswers) => {
+const getScore = (correctAnswers) => {
   const entry = Object.entries(scores).find(([scoreArea, message]) => {
-    const [lowerBound, upperBound] = scoreArea.split("/");
+    const [lowerBound, _, ...upperBound] = scoreArea.split("");
+
+    // const scoreBounds = scoreArea.split("");;
+
+    // const lowerBound = sc
 
     return (
       correctAnswers >= Number(lowerBound) &&
-      Number(correctAnswers) <= upperBound
+      correctAnswers <= Number(upperBound.join(""))
     );
   });
 
