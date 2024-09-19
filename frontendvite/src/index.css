@@ -17,6 +17,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+div#root {
+  display: flex;
+  justify-content: center;
+  width : 100vw;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

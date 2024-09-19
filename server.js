@@ -26,7 +26,6 @@ app.use(
 );
 
 app.get("/questions/:limit", async (req, res) => {
-  console.log(2222);
   try {
     const { limit } = req.params;
 

@@ -52,13 +52,10 @@ export default function App  () {
   };
 
   return (
-    <>
+    <div>
     <nav>
-      <div>practice</div>
-      <div>battle-mode</div>
-      
     </nav>
-      <div className="bg-blue-200 w-[40vw] min-h-screen flex items-center">
+      <div className="pt-[90px] bg-blue-200 w-[40vw] min-h-screen flex items-center">
         {rightAnswer && allowConfetti && <Confetti />}
         <div className="w-full">
           <h2 className="text-center text-blue-400 font-bold text-2xl uppercase mb-10">
@@ -110,7 +107,7 @@ export default function App  () {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
