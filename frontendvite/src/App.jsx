@@ -47,18 +47,20 @@ export default function App  () {
     };
     
     const data = await fetch('http://localhost:2000/checkanswer', opts);
-
+    const json = await data.json();
+    
+    setRightAnswer(json.isCorrect);
 
     setTimeout(() => {
-      // showQuestion();
+      showQuestion();
     }, 4000);
 
-    if (correctAnswer === answer) {
+    if (json.isCorrect) {
       setAllowConfetti(true);
       // setRightAnswer(true);
       setTimeout(() => {
         setAllowConfetti(false);
-        // return setRightAnswer(undefined);
+        return setRightAnswer(undefined);
       }, 4000);
     } else {
       // setRightAnswer(false);
