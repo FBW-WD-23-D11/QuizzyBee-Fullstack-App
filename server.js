@@ -20,7 +20,7 @@ mongoose
 
 app.use(
     cors({
-        origin: "http://localhost:5173", // Allow requests from this domain
+        origin: "http://localhost:5174", // Allow requests from this domain
         methods: "GET", // Allow only GET and POST requests
     })
 );
@@ -29,7 +29,7 @@ app.get("/questions/:limit", async (req, res) => {
     // console.log(2222);
     try {
         const { limit } = req.params;
-
+        // console.log("logged: limit", limit);
         if (limit != 10) {
             return res.send({
                 status: 400,
@@ -45,22 +45,21 @@ app.get("/questions/:limit", async (req, res) => {
 
         res.send({ status: 200, questions });
         // res.send(questions);
-        // console.log("logged: limit", limit);
     } catch (e) {
         console.log("logged: error", e);
     }
 });
 
 app.post("/checkanswer", async (req, res) => {
-    console.log(11111);
     console.log(req.body);
     const { originId, answerIndex } = req.body;
 
     const question = await Question.findOne({ _id: originId });
-    console.log(question);
-    return question.correctIndex === answerIndex
-        ? res.send(true)
-        : res.send(false);
+    // console.log(question);
+    res.status(200).send(question.correctIndex === answerIndex);
+    // return question.correctIndex === answerIndex
+    //     ? res.send(true)
+    //     : res.send(false);
 });
 
 app.listen(port, () => {
