@@ -1,4 +1,4 @@
-const NUMBER_OF_QUESTIONS = 10;
+export const NUMBER_OF_QUESTIONS = 10;
 
 const scores = {
   "0/3": "You can do better than this",
@@ -7,7 +7,7 @@ const scores = {
   "9/10": "Very good",
 };
 
-const bestGetScoreVonMarius = (correctAnswers) => {
+export const getQuizzScore = (correctAnswers) => {
   const entry = Object.entries(scores).find(([scoreArea, message]) => {
     const [lowerBound, upperBound] = scoreArea.split("/");
 
@@ -23,22 +23,22 @@ const bestGetScoreVonMarius = (correctAnswers) => {
 ${message}`;
 };
 
-const getScore = (correctAnswers) => {
-  const entry = Object.entries(scores).find(([scoreArea, message]) => {
-    const [lowerBound, _, ...upperBound] = scoreArea.split("");
+// const getScore = (correctAnswers) => {
+//   const entry = Object.entries(scores).find(([scoreArea, message]) => {
+//     const [lowerBound, _, ...upperBound] = scoreArea.split("");
 
-    // const scoreBounds = scoreArea.split("");;
+//     // const scoreBounds = scoreArea.split("");;
 
-    // const lowerBound = sc
+//     // const lowerBound = sc
 
-    return (
-      correctAnswers >= Number(lowerBound) &&
-      correctAnswers <= Number(upperBound.join(""))
-    );
-  });
+//     return (
+//       correctAnswers >= Number(lowerBound) &&
+//       correctAnswers <= Number(upperBound.join(""))
+//     );
+//   });
 
-  const [_, message] = entry;
+//   const [_, message] = entry;
 
-  return `You had a score of ${String(correctAnswers)} correct answers out of 10
-${message}`;
-};
+//   return `You had a score of ${String(correctAnswers)} correct answers out of 10
+// ${message}`;
+// };

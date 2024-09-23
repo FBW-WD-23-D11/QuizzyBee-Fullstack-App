@@ -1,5 +1,5 @@
 
-import {  useEffect, useState } from "react";
+import {  useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Confetti from "./Confetti";
@@ -7,16 +7,17 @@ import Confetti from "./Confetti";
 
 export default function App  () {
 
-  useEffect(() => {
-    const getQuestions = async () => {
-      const data = await fetch('http://localhost:2000/questions/10');
-      const json = await data.json();
-      setQuestions(json.questions);
-      setQuestion(json.questions[questionIndex]);
+  const getQuestions = useCallback(async () => {
+    const data = await fetch('http://localhost:2000/questions/10');
+    const json = await data.json();
+    setQuestions(json.questions);
+    setQuestion(json.questions[questionIndex]);
+  }, []);
 
-    }
+  useEffect(() => {
     getQuestions();
   }, [])
+
 
 
   const { register, handleSubmit } = useForm();
